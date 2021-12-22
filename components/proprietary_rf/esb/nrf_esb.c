@@ -106,7 +106,7 @@ typedef struct
 } pipe_info_t;
 
 
-/* @brief Structure used by the PRX to organize ACK payloads for multiple pipes. */ 
+/* @brief Structure used by the PRX to organize ACK payloads for multiple pipes. */
 typedef struct
 {
     nrf_esb_payload_t * p_payload;                        /**< Pointer to the ACK payload. */
@@ -337,13 +337,13 @@ static void update_radio_addresses(uint8_t update_mask)
 }
 
 
-static void update_radio_tx_power()
+static void update_radio_tx_power(void)
 {
     NRF_RADIO->TXPOWER = m_config_local.tx_output_power << RADIO_TXPOWER_TXPOWER_Pos;
 }
 
 
-static bool update_radio_bitrate()
+static bool update_radio_bitrate(void)
 {
     NRF_RADIO->MODE = m_config_local.bitrate << RADIO_MODE_MODE_Pos;
 
@@ -385,7 +385,7 @@ static bool update_radio_bitrate()
 }
 
 
-static bool update_radio_protocol()
+static bool update_radio_protocol(void)
 {
     switch (m_config_local.protocol)
     {
@@ -405,7 +405,7 @@ static bool update_radio_protocol()
 }
 
 
-static bool update_radio_crc()
+static bool update_radio_crc(void)
 {
     switch(m_config_local.crc)
     {
@@ -432,7 +432,7 @@ static bool update_radio_crc()
 }
 
 
-static bool update_radio_parameters()
+static bool update_radio_parameters(void)
 {
     bool params_valid = true;
     update_radio_tx_power();
@@ -444,7 +444,7 @@ static bool update_radio_parameters()
 }
 
 
-static void reset_fifos()
+static void reset_fifos(void)
 {
     m_tx_fifo.entry_point = 0;
     m_tx_fifo.exit_point  = 0;
@@ -456,7 +456,7 @@ static void reset_fifos()
 }
 
 
-static void initialize_fifos()
+static void initialize_fifos(void)
 {
     reset_fifos();
 
@@ -469,7 +469,7 @@ static void initialize_fifos()
     {
         m_rx_fifo.p_payload[i] = &m_rx_fifo_payload[i];
     }
-    
+
     for (int i = 0; i < NRF_ESB_TX_FIFO_SIZE; i++)
     {
         m_ack_pl_container[i].p_payload = &m_tx_fifo_payload[i];
@@ -556,7 +556,7 @@ static bool rx_fifo_push_rfbuf(uint8_t pipe, uint8_t pid)
 }
 
 
-static void sys_timer_init()
+static void sys_timer_init(void)
 {
     // Configure the system timer with a 1 MHz base frequency
     NRF_ESB_SYS_TIMER->PRESCALER = 4;
@@ -565,7 +565,7 @@ static void sys_timer_init()
 }
 
 
-static void ppi_init()
+static void ppi_init(void)
 {
     NRF_PPI->CH[NRF_ESB_PPI_TIMER_START].EEP = (uint32_t)&NRF_RADIO->EVENTS_READY;
     NRF_PPI->CH[NRF_ESB_PPI_TIMER_START].TEP = (uint32_t)&NRF_ESB_SYS_TIMER->TASKS_START;
@@ -581,7 +581,7 @@ static void ppi_init()
 }
 
 
-static void start_tx_transaction()
+static void start_tx_transaction(void)
 {
     bool ack;
 
@@ -955,7 +955,7 @@ static uint32_t nrf_esb_get_clear_interrupts(uint32_t * p_interrupts)
 }
 
 
-void RADIO_IRQHandler()
+void RADIO_IRQHandler(void)
 {
     if (NRF_RADIO->EVENTS_READY && (NRF_RADIO->INTENSET & RADIO_INTENSET_READY_Msk))
     {

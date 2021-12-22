@@ -111,7 +111,9 @@ static void on_disconnected(ble_advertising_t * const p_advertising, ble_evt_t c
     p_advertising->whitelist_temporarily_disabled = false;
 
     if (p_ble_evt->evt.gap_evt.conn_handle == p_advertising->current_slave_link_conn_handle &&
-        p_advertising->adv_modes_config.ble_adv_on_disconnect_disabled == false)
+        p_advertising->adv_modes_config.ble_adv_on_disconnect_disabled == false &&
+        p_ble_evt->evt.gap_evt.params.disconnected.reason != BLE_HCI_LOCAL_HOST_TERMINATED_CONNECTION &&
+        p_ble_evt->evt.gap_evt.params.disconnected.reason != BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION)
     {
        ret = ble_advertising_start(p_advertising, BLE_ADV_MODE_DIRECTED_HIGH_DUTY);
        if ((ret != NRF_SUCCESS) && (p_advertising->error_handler != NULL))
