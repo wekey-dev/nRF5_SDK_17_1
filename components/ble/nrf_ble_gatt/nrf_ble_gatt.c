@@ -44,7 +44,13 @@
 #include "nrf_ble_gatt.h"
 
 #define NRF_LOG_MODULE_NAME nrf_ble_gatt
+#if BLE_GATT_LOG_ENABLED
+    #define NRF_LOG_LEVEL       3
+#else
+    #define NRF_LOG_LEVEL       0
+#endif // BLE_GATT_LOG_ENABLED
 #include "nrf_log.h"
+#include "nrf_log_ctrl.h"
 NRF_LOG_MODULE_REGISTER();
 
 #include "nrf_strerror.h"
